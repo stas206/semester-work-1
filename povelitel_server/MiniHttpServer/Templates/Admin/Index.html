@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${Title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+$if(IsAdmin)<div class="admin-bar">Вы вошли как администратор · <a href="/admin/index">Админ-панель</a> · <a href="/auth/logout">Выйти</a></div>$endif
+
+<header class="header">
+    <div class="header-inner">
+        <a class="logo" href="/home/index"><img src="/assets/images/logo.svg" alt="Повелитель Токио"></a>
+        <nav class="nav">
+            <a href="/home/index">Главная</a>
+            <a href="/card/index">Карты</a>
+            <a href="/item/index">Предметы</a>
+            <a href="/rule/index">Правила</a>
+            <a href="/strategy/index">Стратегии</a>
+        </nav>
+        <a class="auth-link" href="/auth/logout">Выйти</a>
+    </div>
+</header>
+
+<main class="container">
+    <h1>Админ-панель</h1>
+    <p class="lead">Управление содержимым сайта. Доступна только администратору.</p>
+
+    <div class="stats" style="margin-top:20px">
+        <div class="panel"><div class="stat-number">${Cards.Count}</div><p>Карты</p></div>
+        <div class="panel"><div class="stat-number">${Items.Count}</div><p>Предметы</p></div>
+        <div class="panel"><div class="stat-number">${Rules.Count}</div><p>Разделы правил</p></div>
+        <div class="panel"><div class="stat-number">${Strategies.Count}</div><p>Стратегии</p></div>
+    </div>
+
+    <div class="admin-panel" style="margin-top:20px">
+        <div class="admin-panel-head"><h2>Карты</h2><a class="button button-light" href="/admin/cardform">+ Добавить карту</a></div>
+        <table class="admin-table">
+            <thead><tr><th>ID</th><th>Название</th><th>Тип</th><th>Описание</th><th>Действия</th></tr></thead>
+            <tbody>
+            $foreach(var c in Cards)
+            <tr data-kind="card" data-id="${c.Id}">
+                <td>${c.Id}</td><td>${c.Name}</td><td>${c.Type}</td><td class="cell-ellipsis">${c.Description}</td>
+                <td><a class="button button-light" href="/admin/cardform?id=${c.Id}">Изменить</a> <button class="photo-del" data-kind="card" data-id="${c.Id}" type="button">Удалить</button></td>
+            </tr>
+            $endfor
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-panel" style="margin-top:20px">
+        <div class="admin-panel-head"><h2>Предметы</h2><a class="button button-light" href="/admin/itemform">+ Добавить предмет</a></div>
+        <table class="admin-table">
+            <thead><tr><th>ID</th><th>Название</th><th>Категория</th><th>Кол-во</th><th>Действия</th></tr></thead>
+            <tbody>
+            $foreach(var i in Items)
+            <tr data-kind="item" data-id="${i.Id}">
+                <td>${i.Id}</td><td>${i.Name}</td><td>${i.Category}</td><td>${i.Quantity}</td>
+                <td><a class="button button-light" href="/admin/itemform?id=${i.Id}">Изменить</a> <button class="photo-del" data-kind="item" data-id="${i.Id}" type="button">Удалить</button></td>
+            </tr>
+            $endfor
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-panel" style="margin-top:20px">
+        <div class="admin-panel-head"><h2>Правила</h2><a class="button button-light" href="/admin/ruleform">+ Добавить раздел</a></div>
+        <table class="admin-table">
+            <thead><tr><th>ID</th><th>Заголовок</th><th>Slug</th><th>Порядок</th><th>Действия</th></tr></thead>
+            <tbody>
+            $foreach(var r in Rules)
+            <tr data-kind="rule" data-id="${r.Id}">
+                <td>${r.Id}</td><td>${r.Title}</td><td>${r.Slug}</td><td>${r.SortOrder}</td>
+                <td><a class="button button-light" href="/admin/ruleform?id=${r.Id}">Изменить</a> <button class="photo-del" data-kind="rule" data-id="${r.Id}" type="button">Удалить</button></td>
+            </tr>
+            $endfor
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-panel" style="margin-top:20px">
+        <div class="admin-panel-head"><h2>Стратегии</h2><a class="button button-light" href="/admin/strategyform">+ Добавить стратегию</a></div>
+        <table class="admin-table">
+            <thead><tr><th>ID</th><th>Заголовок</th><th>Категория</th><th>Slug</th><th>Действия</th></tr></thead>
+            <tbody>
+            $foreach(var s in Strategies)
+            <tr data-kind="strategy" data-id="${s.Id}">
+                <td>${s.Id}</td><td>${s.Title}</td><td>${s.Category}</td><td>${s.Slug}</td>
+                <td><a class="button button-light" href="/admin/strategyform?id=${s.Id}">Изменить</a> <button class="photo-del" data-kind="strategy" data-id="${s.Id}" type="button">Удалить</button></td>
+            </tr>
+            $endfor
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer class="footer">
+    Вики по настольной игре Повелитель Токио · ${CurrentYear}
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

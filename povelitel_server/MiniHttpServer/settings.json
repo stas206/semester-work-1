@@ -1,0 +1,6 @@
+{
+  "Server": { "Host": "127.0.0.1", "Port": 8888, "Path": "" },
+  "AllowedSites": [ "assets" ],
+  "Folders": { "StaticFolder": "static" },
+  "ConnectionString": "Host=localhost;Port=5432;Database=povelitel_tokio;Username=pt_user;Password=pt_pass;Include Error Detail=true"
+}

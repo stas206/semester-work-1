@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${Title}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+$if(IsAdmin)<link rel="stylesheet" href="/assets/css/admin.css">$endif
+</head>
+<body>
+$if(IsAdmin)<div class="admin-bar">Вы вошли как администратор · <a href="/admin/index">Админ-панель</a> · <a href="/auth/logout">Выйти</a></div>$endif
+
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="/home/index"><img src="/assets/images/logo.svg" alt="Повелитель Токио"></a>
+    <nav class="nav">
+      <a href="/home/index">Главная</a>
+      <a href="/card/index">Карты</a>
+      <a href="/item/index" class="active">Предметы</a>
+      <a href="/rule/index">Правила</a>
+      <a href="/strategy/index">Стратегии</a>
+    </nav>
+    $if(IsAdmin)<a class="auth-link" href="/auth/logout">Выйти</a>$else<a class="auth-link" href="/auth/login" title="Вход только для администратора">Вход для админа</a>$endif
+  </div>
+</header>
+
+<main class="container">
+  <h1>Предметы</h1>
+  <div class="filters" id="item-filters">
+    <span class="tag active" data-cat="">Все предметы</span>
+    <span class="tag" data-cat="Кубики">Кубики</span>
+    <span class="tag" data-cat="Поле">Поле</span>
+    <span class="tag" data-cat="Жетоны">Жетоны</span>
+    <span class="tag" data-cat="Планшеты">Планшеты</span>
+  </div>
+  <section class="cards" id="item-grid">
+$foreach(var i in Items)
+    <article class="card" data-cat="${i.Category}">
+      <img src="${i.ImagePath}" alt="${i.Name}">
+      <div class="card-body">
+        <h3>${i.Name}</h3>
+        <span class="badge">${i.Category} · ${i.Quantity} шт.</span>
+        <p class="small">${i.Description}</p>
+      </div>
+    </article>
+$endfor
+  </section>
+</main>
+
+<footer class="footer">
+  Вики по настольной игре Повелитель Токио · ${CurrentYear}
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

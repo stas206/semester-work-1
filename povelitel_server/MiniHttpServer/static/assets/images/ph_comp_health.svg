@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="300" viewBox="0 0 480 300">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E2EBE3"/>
+      <stop offset="1" stop-color="#B7D0BE"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="300" fill="url(#g)"/>
+  <rect x="2" y="2" width="476" height="296" fill="none" stroke="#C17B2D" stroke-opacity="0.45" stroke-width="2" rx="10"/>
+  <g opacity="0.55">
+    <circle cx="108" cy="74" r="17" fill="#C17B2D"/>
+    <polygon points="54,248 138,156 196,210 240,168 300,248" fill="#C17B2D" fill-opacity="0.4"/>
+  </g>
+  <text x="240" y="86" text-anchor="middle" font-family="Roboto Slab, Georgia, serif" font-size="16" fill="#C17B2D">фото-заглушка</text>
+  <text x="240" y="150" text-anchor="middle" font-family="Roboto Slab, Georgia, serif" font-size="28" font-weight="700" fill="#2F2F51">Карточки</text><text x="240" y="186" text-anchor="middle" font-family="Roboto Slab, Georgia, serif" font-size="28" font-weight="700" fill="#2F2F51">здоровья</text>
+  <text x="240" y="262" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="13" fill="#2F2F51" opacity="0.7">здесь будет настоящее фото</text>
+</svg>

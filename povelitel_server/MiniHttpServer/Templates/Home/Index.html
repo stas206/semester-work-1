@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${Title}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+$if(IsAdmin)<link rel="stylesheet" href="/assets/css/admin.css">$endif
+</head>
+<body>
+$if(IsAdmin)<div class="admin-bar">Вы вошли как администратор · <a href="/admin/index">Админ-панель</a> · <a href="/auth/logout">Выйти</a></div>$endif
+
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="/home/index"><img src="/assets/images/logo.svg" alt="Повелитель Токио"></a>
+    <nav class="nav">
+      <a href="/home/index" class="active">Главная</a>
+      <a href="/card/index">Карты</a>
+      <a href="/item/index">Предметы</a>
+      <a href="/rule/index">Правила</a>
+      <a href="/strategy/index">Стратегии</a>
+    </nav>
+    $if(IsAdmin)<a class="auth-link" href="/auth/logout">Выйти</a>$else<a class="auth-link" href="/auth/login" title="Вход только для администратора">Вход для админа</a>$endif
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-top">
+    <div class="hero-welcome">
+      <p class="welcome-small">Добро пожаловать в</p>
+      <p class="hero-title">Повелитель<br>Токио!</p>
+      <div class="hero-sub">
+        <p>Гигантские монстры, разрушенный город</p>
+        <p>и борьба за звание Повелителя Токио.</p>
+      </div>
+      <a href="#about" class="button">Узнать больше <span>&rarr;</span></a>
+    </div>
+  </div>
+
+  <div class="stat-pills">
+    <div class="stat-pill"><img src="/assets/images/users_group_icon.svg" alt=""><div><div class="pill-num">2–6</div><div class="pill-label">игроков</div></div></div>
+    <div class="stat-pill"><img src="/assets/images/schedule_icon.svg" alt=""><div><div class="pill-num">30 мин</div><div class="pill-label">партия</div></div></div>
+    <div class="stat-pill"><img src="/assets/images/family_icon.svg" alt=""><div><div class="pill-num">от 8 лет</div><div class="pill-label">возраст</div></div></div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="about-card" id="about">
+      <p class="about-header">Об игре</p>
+      <p>«Повелитель Токио» — это динамичная настольная игра о гигантских монстрах, которые сражаются за контроль над городом. Бросайте кубики, собирайте энергию, уничтожайте соперников — и станьте последним выжившим Повелителем Токио!</p>
+      <p>Побеждает тот, кто первым наберёт <strong>20 победных очков</strong> или останется последним выжившим монстром. Каждая партия — это баланс между атакой, защитой и накоплением очков.</p>
+      <a href="/rule/index" class="button button-secondary">Подробнее <span>&rarr;</span></a>
+    </div>
+    <div class="fast-transition">
+      <p class="ft-title">Быстрый переход</p>
+      <div class="ft-buttons">
+        <a class="ft-btn" href="/card/index"><img src="/assets/images/cards_icon.svg" alt="">Карты</a>
+        <a class="ft-btn" href="/item/index"><img src="/assets/images/lightning_icon.svg" alt="">Предметы</a>
+        <a class="ft-btn" href="/rule/index"><img src="/assets/images/book_icon.svg" alt="">Правила</a>
+        <a class="ft-btn" href="/strategy/index"><img src="/assets/images/trophy_icon.svg" alt="">Стратегии</a>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title" style="margin-top:24px">Популярные монстры</h2>
+  <section class="cards">
+$foreach(var m in FeaturedMonsters)
+    <article class="card">
+      $if(m.ImagePath)<img src="${m.ImagePath}" alt="${m.Name}">$else<img src="/assets/images/ph_monster_dino.svg" alt="${m.Name}">$endif
+      <div class="card-body">
+        <h3>${m.Name}</h3>
+        <span class="badge">Монстр</span>
+        <p class="small">${m.Description}</p>
+      </div>
+    </article>
+$endfor
+  </section>
+</section>
+
+<footer class="footer">
+  Вики по настольной игре Повелитель Токио · ${CurrentYear}
+</footer>
+</body>
+</html>
