@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${Title}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/admin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${Title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
 $if(IsAdmin)<div class="admin-bar">Вы вошли как администратор · <a href="/admin/index">Админ-панель</a> · <a href="/auth/logout">Выйти</a></div>$endif
@@ -51,13 +51,6 @@ $if(IsAdmin)<div class="admin-bar">Вы вошли как администрат
     <label>Количество (0–999)
       <input type="number" name="quantity" id="quantity" min="0" max="999" required value="${Item.Quantity}">
     </label>
-    <label>Изображение (выбрать из имеющихся или загрузить новое)</label>
-    <select name="image_path" id="item-image-path" data-selected="${Item.ImagePath}">
-      <option value="">— не менять —</option>
-$foreach(var img in ImageOptions)
-      <option value="${img}">${img}</option>
-$endfor
-    </select>
     <div class="upload">
       <label class="upload-dropzone" for="item-photo">
         <input type="file" id="item-photo" class="upload-input" accept="image/*">
@@ -75,7 +68,7 @@ $endfor
 </main>
 
 <footer class="footer">
-  Вики по настольной игре Повелитель Токио · ${CurrentYear}
+  Вики по настольной игре Повелитель Токио · 2026
 </footer>
 <script src="/assets/js/site.js" defer></script>
 </body>

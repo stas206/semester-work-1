@@ -39,19 +39,6 @@
     });
   }
 
-  function initAutofill() {
-    $all("[data-autofill]").forEach(function (sel) {
-      var targetId = sel.getAttribute("data-autofill");
-      var target = document.getElementById(targetId);
-      if (!target) return;
-      var defaults = { "Монстр": "0", "Вспомогательная": "3", "Особая": "5" };
-      sel.addEventListener("change", function () {
-        var d = defaults[sel.value];
-        if (d != null) target.value = d;
-      });
-    });
-  }
-
   function shrink(dataUrl, cb) {
     var img = new Image();
     img.onload = function () {
@@ -140,9 +127,6 @@
     if (form.id === "card-form") {
       if (!NAME_RE.test($("#card-name", form).value.trim())) errors.push("Название карты: 2–60 символов.");
       var d = $("#card-desc", form).value; if (d.length < 10 || d.length > 250) errors.push("Описание: 10–250 символов.");
-    } else if (form.id === "monster-form") {
-      if (!NAME_RE.test($("#monster-name", form).value.trim())) errors.push("Название монстра: 2–60 символов.");
-      var md = $("#monster-desc", form).value; if (md.length < 10 || md.length > 500) errors.push("Описание монстра: 10–500 символов.");
     } else if (form.id === "item-form") {
       if (!NAME_RE.test($("#item-name", form).value.trim())) errors.push("Название предмета: 2–60 символов.");
       if (!NUM_RE.test($("#quantity", form).value)) errors.push("Количество: число 0–999.");
@@ -174,10 +158,9 @@
     if (!cards.length) { container.innerHTML = '<p class="small">Ничего не найдено.</p>'; return; }
     container.innerHTML = cards.map(function (c) {
       return '<article class="card" data-type="' + esc(c.type) + '">' +
-        '<img src="' + esc(c.imagePath || "/assets/images/cards_icon.svg") + '" alt="' + esc(c.name) + '">' +
-        '<div class="card-body"><h3>' + esc(c.name) + '</h3>' +
-        '<span class="badge">' + esc(c.type) + '</span>' +
-        '<a class="button button-light" href="/card/details?id=' + esc(c.id) + '">Подробнее</a></div></article>';
+          '<img src="' + esc(c.imagePath || "/assets/images/cards_icon.svg") + '" alt="' + esc(c.name) + '">' +
+          '<div class="card-body"><h3>' + esc(c.name) + '</h3>' +
+          '<span class="badge">' + esc(c.type) + '</span></div></article>';
     }).join("");
   }
 
@@ -246,7 +229,6 @@
   document.addEventListener("DOMContentLoaded", function () {
     initSelects();
     initCharCounters();
-    initAutofill();
     initUploads();
     initQuill();
     initValidation();

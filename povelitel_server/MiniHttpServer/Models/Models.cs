@@ -14,14 +14,6 @@ public class Card : IEntity
     public string ImagePath { get; set; } = string.Empty;
 }
 
-public class Monster : IEntity
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string ImagePath { get; set; } = string.Empty;
-}
-
 public class Item : IEntity
 {
     public int Id { get; set; }
@@ -56,6 +48,5 @@ public class User : IEntity
     public string Username { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public string Salt { get; set; } = string.Empty;
-    public string Role { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
 }

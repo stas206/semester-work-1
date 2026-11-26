@@ -30,23 +30,14 @@ $if(IsAdmin)<div class="admin-bar">Вы вошли как администрат
 <main class="container">
   <h1>Стратегии</h1>
 
-  <aside class="rule-nav panel">
-    <h2 class="section-title" style="margin-top:0">Стратегии</h2>
-    <ul class="goal-list">
-      $foreach(var s in Strategies)
-      <li><a href="/strategy/details?slug=${s.Slug}">${s.Title}</a></li>
-      $endfor
-    </ul>
-  </aside>
-
   $foreach(var s in Strategies)
-  <h2 class="section-title" id="${s.Slug}">${s.Title}</h2>
+  <h2 class="section-title">${s.Title}</h2>
   $raw(s.Content)
   $endfor
 </main>
 
 <footer class="footer">
-  Вики по настольной игре Повелитель Токио · ${CurrentYear}
+  Вики по настольной игре Повелитель Токио · 2026
 </footer>
 </body>
 </html>

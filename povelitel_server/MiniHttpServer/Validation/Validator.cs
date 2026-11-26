@@ -28,16 +28,6 @@ public static class Validator
         return Build(errors);
     }
 
-    public static ValidationResult ValidateMonster(string name, string description)
-    {
-        var errors = new List<string>();
-        if (!NameRegex.IsMatch(name ?? string.Empty))
-            errors.Add("Название монстра: 2–60 символов (буквы, цифры, пробел, дефис, апостроф).");
-        if (string.IsNullOrEmpty(description) || description.Length < 10 || description.Length > 500)
-            errors.Add("Описание монстра: 10–500 символов.");
-        return Build(errors);
-    }
-
     public static ValidationResult ValidateItem(string name, string category, string description, string quantity)
     {
         var errors = new List<string>();

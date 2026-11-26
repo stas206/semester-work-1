@@ -1,8 +1,3 @@
-INSERT INTO monsters ("Name", "Description", "ImagePath") VALUES
-($$Кибер Киса$$, $$Быстрый робот с большим запасом энергии и ловкими атаками. Отлично уворачивается и первым захватывает Токио.$$, $$/assets/images/ph_monster_kitty.svg$$),
-($$Гигазавр$$, $$Мощный монстр, который любит разрушать город и давить соперников. Выигрывает за счёт грубой силы и высокого здоровья.$$, $$/assets/images/ph_monster_dino.svg$$),
-($$Космо пингвин$$, $$Необычный герой с замороженными атаками и хитрой тактикой. Замораживает соперников и копит энергию.$$, $$/assets/images/ph_monster_penguin.svg$$);
-
 INSERT INTO cards ("Name", "Type", "Description", "ImagePath") VALUES
 ($$Стимул для аутсайдера$$, $$Вспомогательная$$, $$Если в конце хода у вас меньше всех очков, получите 1 очко.$$, $$/assets/images/ph_helper_drink.svg$$),
 ($$Бомбардировка$$, $$Вспомогательная$$, $$Все монстры (включая вас) теряют по 3 здоровья.$$, $$/assets/images/ph_helper_shield.svg$$),
@@ -34,5 +29,5 @@ INSERT INTO strategies ("Slug", "Title", "Content", "Category") VALUES
 ($$fazy-partii$$, $$Тактика по фазам партии$$, $$<section class="step-cards"><div class="panel step-card"><span class="step-num">1</span><p><strong>Начало.</strong> Копи энергию и здоровье, не лезь в драку. Купи 1–2 дешёвые карты.</p></div><div class="panel step-card"><span class="step-num">2</span><p><strong>Середина.</strong> Займи Токио на 2–3 хода, набери очки, затем уступи и полечись.</p></div><div class="panel step-card"><span class="step-num">3</span><p><strong>Конец.</strong> Если близок к 20 очкам — рви к финишу. Если нет — добивай ослабших.</p></div></section>$$, $$Общая$$),
 ($$opasnye-oshibki$$, $$Опасные ошибки$$, $$<ul class="goal-list"><li>❌ <strong>Вставать в Токио с 1 HP</strong> — даже ради очков. Тебя собьют до следующего хода.</li><li>❌ <strong>Гнаться за картами и забывать про здоровье</strong> — энергия не спасёт от когтей.</li><li>❌ <strong>Держаться за Токио до последнего</strong> — лучше уступить и вернуться, чем погибнуть.</li><li>❌ <strong>Игнорировать лидера по очкам</strong> — если кто-то близок к 20, атакуй его в первую очередь.</li></ul><section class="rules-banner" style="margin-top:24px"><p class="banner-goal">Главное правило: <strong>гибкость</strong>. Нет одной выигрышной стратегии — побеждает тот, кто быстрее всех перестраивается под ситуацию за столом.</p></section>$$, $$Защита$$);
 
-INSERT INTO users ("Username", "PasswordHash", "Salt", "Role", "DisplayName") VALUES
-($$admin$$, $$KH1HZpyiKymrTviD3Q61TrhkRSt/GTjMxUOLXZHyCWE=$$, $$povelitel-salt$$, $$admin$$, $$Администратор$$);
+INSERT INTO users ("Username", "PasswordHash", "Salt", "DisplayName") VALUES
+    ($$admin$$, $$KH1HZpyiKymrTviD3Q61TrhkRSt/GTjMxUOLXZHyCWE=$$, $$povelitel-salt$$, $$Администратор$$);

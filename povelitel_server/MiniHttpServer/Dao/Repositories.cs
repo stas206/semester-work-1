@@ -52,24 +52,6 @@ public sealed class CardRepository : Repository<Card>, ICardRepository
     }
 }
 
-public interface IMonsterRepository : IRepository<Monster>
-{
-    Task<IReadOnlyList<Monster>> SearchAsync(string query);
-}
-
-public sealed class MonsterRepository : Repository<Monster>, IMonsterRepository
-{
-    public MonsterRepository(IOrmContext orm) : base(orm, "monsters") { }
-
-    public async Task<IReadOnlyList<Monster>> SearchAsync(string query)
-    {
-        var all = await GetAllAsync().ConfigureAwait(false);
-        if (string.IsNullOrWhiteSpace(query))
-            return all;
-        return all.Where(m => m.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
-    }
-}
-
 public interface IItemRepository : IRepository<Item> { }
 
 public sealed class ItemRepository : Repository<Item>, IItemRepository
@@ -77,36 +59,18 @@ public sealed class ItemRepository : Repository<Item>, IItemRepository
     public ItemRepository(IOrmContext orm) : base(orm, "items") { }
 }
 
-public interface IRuleRepository : IRepository<Rule>
-{
-    Task<Rule?> GetBySlugAsync(string slug);
-}
+public interface IRuleRepository : IRepository<Rule> { }
 
 public sealed class RuleRepository : Repository<Rule>, IRuleRepository
 {
     public RuleRepository(IOrmContext orm) : base(orm, "rules") { }
-
-    public async Task<Rule?> GetBySlugAsync(string slug)
-    {
-        var all = await GetAllAsync().ConfigureAwait(false);
-        return all.FirstOrDefault(r => string.Equals(r.Slug, slug, StringComparison.OrdinalIgnoreCase));
-    }
 }
 
-public interface IStrategyRepository : IRepository<Strategy>
-{
-    Task<Strategy?> GetBySlugAsync(string slug);
-}
+public interface IStrategyRepository : IRepository<Strategy> { }
 
 public sealed class StrategyRepository : Repository<Strategy>, IStrategyRepository
 {
     public StrategyRepository(IOrmContext orm) : base(orm, "strategies") { }
-
-    public async Task<Strategy?> GetBySlugAsync(string slug)
-    {
-        var all = await GetAllAsync().ConfigureAwait(false);
-        return all.FirstOrDefault(s => string.Equals(s.Slug, slug, StringComparison.OrdinalIgnoreCase));
-    }
 }
 
 public interface IUserRepository : IRepository<User>

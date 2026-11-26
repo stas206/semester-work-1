@@ -11,15 +11,11 @@ namespace MiniHttpServer.Controllers;
 
 public abstract class PovelitelController : BaseController
 {
-    private static readonly string ImagesRoot =
-        Path.Combine(AppContext.BaseDirectory, "static", "assets", "images");
-
     protected bool IsCurrentUserAdmin => IsAuthenticated();
 
     protected void ApplyBase(SitePageModel model)
     {
         model.IsAdmin = IsCurrentUserAdmin;
-        model.CurrentYear = DateTime.Now.Year;
     }
 
     protected IHttpResult? RequireAdmin()
@@ -41,24 +37,6 @@ public abstract class PovelitelController : BaseController
         return Page("Shared/Error.html", model, (HttpStatusCode)status);
     }
 
-    protected IReadOnlyList<string> ListAvailableImages()
-    {
-        var list = new List<string>();
-        try
-        {
-            if (Directory.Exists(ImagesRoot))
-            {
-                foreach (var file in Directory.EnumerateFiles(ImagesRoot, "*.svg"))
-                    list.Add("/assets/images/" + Path.GetFileName(file));
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("[PovelitelController] ListAvailableImages: " + ex.Message);
-        }
-        return list;
-    }
-
     protected string? SaveUploadedImage(string? dataUrl)
     {
         if (string.IsNullOrWhiteSpace(dataUrl) || !dataUrl.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
@@ -78,7 +56,7 @@ public abstract class PovelitelController : BaseController
         else if (header.Contains("gif", StringComparison.OrdinalIgnoreCase)) ext = ".gif";
         else if (header.Contains("webp", StringComparison.OrdinalIgnoreCase)) ext = ".webp";
 
-        var dir = Path.Combine(ImagesRoot, "uploads");
+        var dir = Path.Combine(AppContext.BaseDirectory, "static", "assets", "images", "uploads");
         Directory.CreateDirectory(dir);
         string fileName = Guid.NewGuid().ToString("N") + ext;
         File.WriteAllBytes(Path.Combine(dir, fileName), bytes);
@@ -87,15 +65,14 @@ public abstract class PovelitelController : BaseController
 }
 
 [Controller]
-public sealed class HomeController(IMonsterRepository monsters) : PovelitelController
+public sealed class HomeController : PovelitelController
 {
     [Get]
-    public async Task<IHttpResult> Index()
+    public IHttpResult Index()
     {
         var model = new HomeModel
         {
-            Title = "Повелитель Токио — настольная игра",
-            FeaturedMonsters = (await monsters.GetAllAsync().ConfigureAwait(false)).Take(3).ToList()
+            Title = "Повелитель Токио — настольная игра"
         };
         ApplyBase(model);
         return Page("Home/Index.html", model);
@@ -114,17 +91,6 @@ public sealed class CardController(ICardRepository cards) : PovelitelController
         var model = new CardListModel { Title = "Карты — Повелитель Токио", Cards = list, Query = q ?? string.Empty };
         ApplyBase(model);
         return Page("Card/Index.html", model);
-    }
-
-    [Get]
-    public async Task<IHttpResult> Details(int id)
-    {
-        var card = await cards.GetByIdAsync(id).ConfigureAwait(false);
-        if (card == null)
-            return ErrorPage(404, "Карта не найдена. Возможно, она была удалена.");
-        var model = new CardDetailModel { Title = card.Name + " — Повелитель Токио", Card = card };
-        ApplyBase(model);
-        return Page("Card/Details.html", model);
     }
 
     [Get]
@@ -167,19 +133,6 @@ public sealed class RuleController(IRuleRepository rules) : PovelitelController
         ApplyBase(model);
         return Page("Rule/Index.html", model);
     }
-
-    [Get]
-    public async Task<IHttpResult> Details(string slug)
-    {
-        var rule = await rules.GetBySlugAsync(slug ?? string.Empty).ConfigureAwait(false);
-        if (rule == null)
-            return ErrorPage(404, "Раздел правил не найден.");
-        var all = (await rules.GetAllAsync().ConfigureAwait(false))
-            .OrderBy(r => r.SortOrder).ThenBy(r => r.Id).ToList();
-        var model = new RuleDetailModel { Title = rule.Title + " — Повелитель Токио", Rule = rule, Rules = all };
-        ApplyBase(model);
-        return Page("Rule/Details.html", model);
-    }
 }
 
 [Controller]
@@ -193,19 +146,6 @@ public sealed class StrategyController(IStrategyRepository strategies) : Povelit
         var model = new StrategyListModel { Title = "Стратегии — Повелитель Токио", Strategies = list };
         ApplyBase(model);
         return Page("Strategy/Index.html", model);
-    }
-
-    [Get]
-    public async Task<IHttpResult> Details(string slug)
-    {
-        var strategy = await strategies.GetBySlugAsync(slug ?? string.Empty).ConfigureAwait(false);
-        if (strategy == null)
-            return ErrorPage(404, "Стратегия не найдена.");
-        var all = (await strategies.GetAllAsync().ConfigureAwait(false))
-            .OrderBy(s => s.Category).ThenBy(s => s.Id).ToList();
-        var model = new StrategyDetailModel { Title = strategy.Title + " — Повелитель Токио", Strategy = strategy, Strategies = all };
-        ApplyBase(model);
-        return Page("Strategy/Details.html", model);
     }
 }
 
@@ -232,9 +172,6 @@ public sealed class AuthController(IUserRepository users) : PovelitelController
         var user = await users.GetByUsernameAsync(username ?? string.Empty).ConfigureAwait(false);
         if (user == null || !PasswordHasher.Verify(password ?? string.Empty, user.Salt, user.PasswordHash))
             return LoginFailed(target, "Неверный логин или пароль.", username ?? string.Empty);
-
-        if (!string.Equals(user.Role, "admin", StringComparison.OrdinalIgnoreCase))
-            return LoginFailed(target, "У учётной записи нет доступа к админ-панели.", username ?? string.Empty);
 
         var sessionId = SessionService.CreateSession(user.Id);
         var cookie = new Cookie("sessionId", sessionId, "/")
@@ -270,7 +207,6 @@ public sealed class AuthController(IUserRepository users) : PovelitelController
 
 [Controller]
 public sealed class AdminController(
-    IMonsterRepository monsters,
     ICardRepository cards,
     IItemRepository items,
     IRuleRepository rules,
@@ -285,7 +221,6 @@ public sealed class AdminController(
         var model = new AdminModel
         {
             Title = "Админ-панель — Повелитель Токио",
-            Monsters = await monsters.GetAllAsync().ConfigureAwait(false),
             Cards = await cards.GetAllAsync().ConfigureAwait(false),
             Items = await items.GetAllAsync().ConfigureAwait(false),
             Rules = await rules.GetAllAsync().ConfigureAwait(false),
@@ -310,8 +245,7 @@ public sealed class AdminController(
         {
             Title = (card.Id > 0 ? "Редактировать карту" : "Новая карта") + " — Повелитель Токио",
             Card = card,
-            IsEdit = card.Id > 0,
-            ImageOptions = ListAvailableImages()
+            IsEdit = card.Id > 0
         };
         ApplyBase(model);
         return Page("Admin/CardForm.html", model);
@@ -320,7 +254,7 @@ public sealed class AdminController(
     [Post]
     public async Task<IHttpResult> SaveCard(
         string? name, string? type, string? description, int? id,
-        string? image_data, string? image_path)
+        string? image_data)
     {
         var guard = RequireAdmin();
         if (guard != null) return guard;
@@ -338,7 +272,7 @@ public sealed class AdminController(
         if (!validation.IsValid)
             return RenderCardForm(card, validation.ErrorHtml);
 
-        card.ImagePath = ResolveImagePath(image_data, image_path, card.ImagePath);
+        card.ImagePath = ResolveImagePath(image_data, card.ImagePath);
 
         if (card.Id > 0) await cards.UpdateAsync(card).ConfigureAwait(false);
         else await cards.InsertAsync(card).ConfigureAwait(false);
@@ -369,8 +303,7 @@ public sealed class AdminController(
         {
             Title = (item.Id > 0 ? "Редактировать предмет" : "Новый предмет") + " — Повелитель Токио",
             Item = item,
-            IsEdit = item.Id > 0,
-            ImageOptions = ListAvailableImages()
+            IsEdit = item.Id > 0
         };
         ApplyBase(model);
         return Page("Admin/ItemForm.html", model);
@@ -379,7 +312,7 @@ public sealed class AdminController(
     [Post]
     public async Task<IHttpResult> SaveItem(
         string? name, string? category, string? description,
-        string? quantity, int? id, string? image_data, string? image_path)
+        string? quantity, int? id, string? image_data)
     {
         var guard = RequireAdmin();
         if (guard != null) return guard;
@@ -398,7 +331,7 @@ public sealed class AdminController(
         if (!validation.IsValid)
             return RenderItemForm(item, validation.ErrorHtml);
 
-        item.ImagePath = ResolveImagePath(image_data, image_path, item.ImagePath);
+        item.ImagePath = ResolveImagePath(image_data, item.ImagePath);
 
         if (item.Id > 0) await items.UpdateAsync(item).ConfigureAwait(false);
         else await items.InsertAsync(item).ConfigureAwait(false);
@@ -411,62 +344,6 @@ public sealed class AdminController(
         if (!IsCurrentUserAdmin)
             return Json(new { ok = false, error = "auth" });
         await items.DeleteAsync(id).ConfigureAwait(false);
-        return Json(new { ok = true });
-    }
-
-    [Get]
-    public async Task<IHttpResult> MonsterForm(int? id)
-    {
-        var guard = RequireAdmin();
-        if (guard != null) return guard;
-
-        var monster = id.HasValue && id.Value > 0
-            ? await monsters.GetByIdAsync(id.Value).ConfigureAwait(false)
-            : new Monster();
-        if (monster == null) monster = new Monster();
-
-        var model = new MonsterFormModel
-        {
-            Title = (monster.Id > 0 ? "Редактировать монстра" : "Новый монстр") + " — Повелитель Токио",
-            Monster = monster,
-            IsEdit = monster.Id > 0,
-            ImageOptions = ListAvailableImages()
-        };
-        ApplyBase(model);
-        return Page("Admin/MonsterForm.html", model);
-    }
-
-    [Post]
-    public async Task<IHttpResult> SaveMonster(string? name, string? description, int? id, string? image_data, string? image_path)
-    {
-        var guard = RequireAdmin();
-        if (guard != null) return guard;
-
-        var validation = Validator.ValidateMonster(name, description);
-        var monster = id.HasValue && id.Value > 0
-            ? await monsters.GetByIdAsync(id.Value).ConfigureAwait(false)
-            : new Monster();
-        if (monster == null) monster = new Monster();
-
-        monster.Name = name ?? string.Empty;
-        monster.Description = description ?? string.Empty;
-
-        if (!validation.IsValid)
-            return RenderMonsterForm(monster, validation.ErrorHtml);
-
-        monster.ImagePath = ResolveImagePath(image_data, image_path, monster.ImagePath);
-
-        if (monster.Id > 0) await monsters.UpdateAsync(monster).ConfigureAwait(false);
-        else await monsters.InsertAsync(monster).ConfigureAwait(false);
-        return Redirect("/admin/index");
-    }
-
-    [Post]
-    public async Task<IHttpResult> DeleteMonster(int id)
-    {
-        if (!IsCurrentUserAdmin)
-            return Json(new { ok = false, error = "auth" });
-        await monsters.DeleteAsync(id).ConfigureAwait(false);
         return Json(new { ok = true });
     }
 
@@ -582,23 +459,16 @@ public sealed class AdminController(
 
     private IHttpResult RenderCardForm(Card card, string errorHtml)
     {
-        var model = new CardFormModel { Title = "Карта — Повелитель Токио", Card = card, ErrorHtml = errorHtml, IsEdit = card.Id > 0, ImageOptions = ListAvailableImages() };
+        var model = new CardFormModel { Title = "Карта — Повелитель Токио", Card = card, ErrorHtml = errorHtml, IsEdit = card.Id > 0 };
         ApplyBase(model);
         return Page("Admin/CardForm.html", model);
     }
 
     private IHttpResult RenderItemForm(Item item, string errorHtml)
     {
-        var model = new ItemFormModel { Title = "Предмет — Повелитель Токио", Item = item, ErrorHtml = errorHtml, IsEdit = item.Id > 0, ImageOptions = ListAvailableImages() };
+        var model = new ItemFormModel { Title = "Предмет — Повелитель Токио", Item = item, ErrorHtml = errorHtml, IsEdit = item.Id > 0 };
         ApplyBase(model);
         return Page("Admin/ItemForm.html", model);
-    }
-
-    private IHttpResult RenderMonsterForm(Monster monster, string errorHtml)
-    {
-        var model = new MonsterFormModel { Title = "Монстр — Повелитель Токио", Monster = monster, ErrorHtml = errorHtml, IsEdit = monster.Id > 0, ImageOptions = ListAvailableImages() };
-        ApplyBase(model);
-        return Page("Admin/MonsterForm.html", model);
     }
 
     private IHttpResult RenderRuleForm(Rule rule, string errorHtml)
@@ -615,11 +485,10 @@ public sealed class AdminController(
         return Page("Admin/StrategyForm.html", model);
     }
 
-    private string ResolveImagePath(string? imageData, string? imagePath, string current)
+    private string ResolveImagePath(string? imageData, string current)
     {
         var saved = SaveUploadedImage(imageData);
         if (!string.IsNullOrEmpty(saved)) return saved;
-        if (!string.IsNullOrWhiteSpace(imagePath)) return imagePath;
         return current ?? string.Empty;
     }
 }

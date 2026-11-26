@@ -7,23 +7,16 @@ public class SitePageModel
     public string Title { get; set; } = "Повелитель Токио";
     public bool IsAdmin { get; set; }
     public string UserName { get; set; } = string.Empty;
-    public int CurrentYear { get; set; } = DateTime.Now.Year;
 }
 
 public class HomeModel : SitePageModel
 {
-    public IReadOnlyList<Monster> FeaturedMonsters { get; set; } = Array.Empty<Monster>();
 }
 
 public class CardListModel : SitePageModel
 {
     public IReadOnlyList<Card> Cards { get; set; } = Array.Empty<Card>();
     public string Query { get; set; } = string.Empty;
-}
-
-public class CardDetailModel : SitePageModel
-{
-    public Card? Card { get; set; }
 }
 
 public class ItemListModel : SitePageModel
@@ -36,20 +29,8 @@ public class RuleListModel : SitePageModel
     public IReadOnlyList<Rule> Rules { get; set; } = Array.Empty<Rule>();
 }
 
-public class RuleDetailModel : SitePageModel
-{
-    public Rule? Rule { get; set; }
-    public IReadOnlyList<Rule> Rules { get; set; } = Array.Empty<Rule>();
-}
-
 public class StrategyListModel : SitePageModel
 {
-    public IReadOnlyList<Strategy> Strategies { get; set; } = Array.Empty<Strategy>();
-}
-
-public class StrategyDetailModel : SitePageModel
-{
-    public Strategy? Strategy { get; set; }
     public IReadOnlyList<Strategy> Strategies { get; set; } = Array.Empty<Strategy>();
 }
 
@@ -62,7 +43,6 @@ public class LoginModel : SitePageModel
 
 public class AdminModel : SitePageModel
 {
-    public IReadOnlyList<Monster> Monsters { get; set; } = Array.Empty<Monster>();
     public IReadOnlyList<Card> Cards { get; set; } = Array.Empty<Card>();
     public IReadOnlyList<Item> Items { get; set; } = Array.Empty<Item>();
     public IReadOnlyList<Rule> Rules { get; set; } = Array.Empty<Rule>();
@@ -74,15 +54,6 @@ public class CardFormModel : SitePageModel
     public Card Card { get; set; } = new();
     public string ErrorHtml { get; set; } = string.Empty;
     public bool IsEdit { get; set; }
-    public IReadOnlyList<string> ImageOptions { get; set; } = Array.Empty<string>();
-}
-
-public class MonsterFormModel : SitePageModel
-{
-    public Monster Monster { get; set; } = new();
-    public string ErrorHtml { get; set; } = string.Empty;
-    public bool IsEdit { get; set; }
-    public IReadOnlyList<string> ImageOptions { get; set; } = Array.Empty<string>();
 }
 
 public class ItemFormModel : SitePageModel
@@ -90,7 +61,6 @@ public class ItemFormModel : SitePageModel
     public Item Item { get; set; } = new();
     public string ErrorHtml { get; set; } = string.Empty;
     public bool IsEdit { get; set; }
-    public IReadOnlyList<string> ImageOptions { get; set; } = Array.Empty<string>();
 }
 
 public class RuleFormModel : SitePageModel

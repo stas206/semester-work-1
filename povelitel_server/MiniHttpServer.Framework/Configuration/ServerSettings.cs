@@ -5,7 +5,6 @@ public sealed class ServerSettings
     public ServerConfig Server { get; set; } = new();
     public List<string> AllowedSites { get; set; } = new();
     public FoldersConfig Folders { get; set; } = new();
-    public EmailSettings Email { get; set; } = new();
     public string ConnectionString { get; set; } = string.Empty;
 
     public string GetStaticRoot()

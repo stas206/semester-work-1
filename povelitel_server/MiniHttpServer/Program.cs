@@ -15,7 +15,6 @@ var settings = ConfigurationManager.Instance.Settings;
 var factory = new DefaultControllerFactory();
 var orm = new OrmContext(settings.ConnectionString);
 factory.Register<IOrmContext>(() => orm);
-factory.Register<IMonsterRepository>(() => new MonsterRepository(orm));
 factory.Register<ICardRepository>(() => new CardRepository(orm));
 factory.Register<IItemRepository>(() => new ItemRepository(orm));
 factory.Register<IRuleRepository>(() => new RuleRepository(orm));
